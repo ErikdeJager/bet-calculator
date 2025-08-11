@@ -61,7 +61,7 @@ const CalculatorWithDraw: Component = () => {
 
             <div class={"grid grid-cols-3 gap-14 mt-10"}>
                 <div class={"flex flex-col gap-4"}>
-                    <h2 class={"text-xl"}>First Option</h2>
+                    <input type="text" placeholder={"Option 1"} class="input w-full text-xl"/>
 
                     <div>
                         <p>Total wins</p>
@@ -89,7 +89,7 @@ const CalculatorWithDraw: Component = () => {
                 </div>
 
                 <div class={"flex flex-col gap-4"}>
-                    <h2 class={"text-xl"}>Draw Option</h2>
+                    <input type="text" placeholder={"Draw"} class="input w-full text-xl"/>
 
                     <div>
                         <p>Total draws</p>
@@ -117,7 +117,7 @@ const CalculatorWithDraw: Component = () => {
                 </div>
 
                 <div class={"flex flex-col gap-4"}>
-                    <h2 class={"text-xl"}>Second Option</h2>
+                    <input type="text" placeholder={"Option 2"} class="input w-full text-xl"/>
 
                     <div>
                         <p>Total wins</p>
