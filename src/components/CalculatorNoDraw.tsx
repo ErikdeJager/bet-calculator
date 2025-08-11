@@ -8,12 +8,11 @@ const CalculatorNoDraw: Component = () => {
     const [oneWinCount, setOneWinCount] = createSignal<number>(0)
     const [twoWinCount, setTwoWinCount] = createSignal<number>(0)
 
-
     const [oneMultiplier, setOneMultiplier] = createSignal<number>(0)
     const [twoMultiplier, setTwoMultiplier] = createSignal<number>(0)
 
-    const oneOutcome = createMemo(() => betSize() * oneMultiplier());
-    const twoOutcome = createMemo(() => betSize() * twoMultiplier());
+    const oneOutcome = createMemo(() => betSize() * (oneMultiplier() - 1));
+    const twoOutcome = createMemo(() => betSize() * (twoMultiplier() - 1));
 
     const oneFrequency = createMemo(() => {
         const total = oneWinCount() + twoWinCount();
@@ -46,7 +45,7 @@ const CalculatorNoDraw: Component = () => {
 
             <div class={"grid grid-cols-2 gap-14 mt-10"}>
                 <div class={"flex flex-col gap-4"}>
-                    <h2 class={"text-xl"}>First Option</h2>
+                    <input type="text" placeholder={"Option 1"} class="input w-full text-xl"/>
 
                     <div>
                         <p>Total wins</p>
@@ -74,7 +73,7 @@ const CalculatorNoDraw: Component = () => {
 
                 </div>
                 <div class={"flex flex-col gap-4"}>
-                    <h2 class={"text-xl"}>Second Option</h2>
+                    <input type="text" placeholder={"Option 2"} class="input w-full text-xl"/>
 
                     <div>
                         <p>Total wins</p>

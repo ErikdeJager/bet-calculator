@@ -14,9 +14,9 @@ const CalculatorWithDraw: Component = () => {
     const [drawMultiplier, setDrawMultiplier] = createSignal<number>(0)
     const [twoMultiplier, setTwoMultiplier] = createSignal<number>(0)
 
-    const oneOutcome = createMemo(() => betSize() * oneMultiplier());
-    const drawOutcome = createMemo(() => betSize() * drawMultiplier());
-    const twoOutcome = createMemo(() => betSize() * twoMultiplier());
+    const oneOutcome = createMemo(() => betSize() * (oneMultiplier() - 1));
+    const drawOutcome = createMemo(() => betSize() * (drawMultiplier() - 1));
+    const twoOutcome = createMemo(() => betSize() * (twoMultiplier() - 1));
 
     const oneFrequency = createMemo(() => {
         const total = oneWinCount() + twoWinCount() + drawCount();

@@ -7,33 +7,38 @@ const CalculatorSplitWinrateNoDraw: Component = () => {
 
     const [oneWinCount, setOneWinCount] = createSignal<number>(0)
     const [twoWinCount, setTwoWinCount] = createSignal<number>(0)
+    const [oneLossCount, setOneLossCount] = createSignal<number>(0)
+    const [twoLossCount, setTwoLossCount] = createSignal<number>(0)
 
 
     const [oneMultiplier, setOneMultiplier] = createSignal<number>(0)
     const [twoMultiplier, setTwoMultiplier] = createSignal<number>(0)
 
-    const oneOutcome = createMemo(() => betSize() * oneMultiplier());
-    const twoOutcome = createMemo(() => betSize() * twoMultiplier());
+    const oneOutcome = createMemo(() => betSize() * (oneMultiplier() - 1));
+    const twoOutcome = createMemo(() => betSize() * (twoMultiplier() - 1));
 
-    const oneFrequency = createMemo(() => {
-        const total = oneWinCount() + twoWinCount();
-        return total > 0 ? oneWinCount() / total : 0;
-    });
+    const winFrequency = createMemo(() => {
+        const totalOne = oneWinCount() + oneLossCount();
+        const totalTwo = twoWinCount() + twoLossCount();
 
-    const twoFrequency = createMemo(() => {
-        const total = oneWinCount() + twoWinCount();
-        return total > 0 ? twoWinCount() / total : 0;
+        const winrateOne = totalOne > 0 ? oneWinCount() / totalOne : 0;
+        const winrateTwo = totalTwo > 0 ? twoWinCount() / totalTwo : 0;
+
+        const oneFrequency = winrateOne / (winrateOne + winrateTwo)
+        const twoFrequency = winrateTwo / (winrateOne + winrateTwo)
+
+        return [oneFrequency, twoFrequency]
     });
 
     const oneEV = createMemo(() => {
-        const valuationOne = oneOutcome() * oneFrequency()
-        const valuationTwo = (betSize() - betSize() * 2) * twoFrequency()
+        const valuationOne = oneOutcome() * winFrequency()[0]
+        const valuationTwo = (betSize() - betSize() * 2) * winFrequency()[1]
         return valuationOne + valuationTwo
 
     })
     const twoEV = createMemo(() => {
-        const valuationOne = (betSize() - betSize() * 2) * oneFrequency()
-        const valuationTwo = twoOutcome() * twoFrequency()
+        const valuationOne = (betSize() - betSize() * 2) * winFrequency()[0]
+        const valuationTwo = twoOutcome() * winFrequency()[1]
         return valuationOne + valuationTwo
     })
 
@@ -46,13 +51,18 @@ const CalculatorSplitWinrateNoDraw: Component = () => {
 
             <div class={"grid grid-cols-2 gap-14 mt-10"}>
                 <div class={"flex flex-col gap-4"}>
-                    <h2 class={"text-xl"}>First Option</h2>
+                    <input type="text" placeholder={"Option 1"} class="input w-full text-xl"/>
 
                     <div>
-                        <p>Total wins</p>
-                        <input type="number" class="input w-full" value={oneWinCount()} onInput={(e) => {
-                            setOneWinCount(parseInt(e.target.value));
-                        }} />
+                        <p>Winrate (Win/Loss)</p>
+                        <div class={"flex flex-row gap-2"}>
+                            <input type="number" class="input w-full" value={oneWinCount()} onInput={(e) => {
+                                setOneWinCount(parseInt(e.target.value));
+                            }} />
+                            <input type="number" class="input w-full" value={oneLossCount()} onInput={(e) => {
+                                setOneLossCount(parseInt(e.target.value));
+                            }} />
+                        </div>
                     </div>
 
                     <div>
@@ -69,18 +79,23 @@ const CalculatorSplitWinrateNoDraw: Component = () => {
 
                     <div>
                         <p>Odds of winning</p>
-                        <input disabled type="text" step="any" placeholder="Format: 1,25" class="input w-full" value={oneFrequency() * 100 + "%"}/>
+                        <input disabled type="text" step="any" placeholder="Format: 1,25" class="input w-full" value={winFrequency()[0] * 100 + "%"}/>
                     </div>
 
                 </div>
                 <div class={"flex flex-col gap-4"}>
-                    <h2 class={"text-xl"}>Second Option</h2>
+                    <input type="text" placeholder={"Option 2"} class="input w-full text-xl"/>
 
                     <div>
-                        <p>Total wins</p>
-                        <input type="number" class="input w-full" value={twoWinCount()} onInput={(e) => {
-                            setTwoWinCount(parseInt(e.target.value));
-                        }} />
+                        <p>Winrate (Win/Loss)</p>
+                        <div class={"flex flex-row gap-2"}>
+                            <input type="number" class="input w-full" value={twoWinCount()} onInput={(e) => {
+                                setTwoWinCount(parseInt(e.target.value));
+                            }} />
+                            <input type="number" class="input w-full" value={twoLossCount()} onInput={(e) => {
+                                setTwoLossCount(parseInt(e.target.value));
+                            }} />
+                        </div>
                     </div>
 
                     <div>
@@ -97,7 +112,7 @@ const CalculatorSplitWinrateNoDraw: Component = () => {
 
                     <div>
                         <p>Odds of winning</p>
-                        <input disabled type="text" step="any" placeholder="Format: 1,25" class="input w-full" value={twoFrequency() * 100 + "%"}/>
+                        <input disabled type="text" step="any" placeholder="Format: 1,25" class="input w-full" value={winFrequency()[1] * 100 + "%"}/>
                     </div>
                 </div>
             </div>
