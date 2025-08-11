@@ -1,8 +1,10 @@
 import type { Component } from 'solid-js';
+import Calculator from "./components/Calculator";
 
 const App: Component = () => {
   return (
-      <div class="my-10 mt-6">
+      <div class="mx-10 mt-6">
+          <Calculator/>
       </div>
   );
 };
